@@ -1,0 +1,67 @@
+global:
+  imagePullPolicy: IfNotPresent
+
+orchestrator:
+  name: orchestrator
+  replicaCount: 1
+  image:
+    repository: orchestrator-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  env:
+    springProfilesActive: dev
+    kafkaBootstrapServers: kafka:9092
+    datasourceUrl: jdbc:postgresql://postgres:5432/job_orchestration
+    datasourceUsername: job_orchestration
+    datasourcePassword: job_orchestration
+    issuerUri: http://keycloak:8080/realms/job-orchestration
+
+worker:
+  name: worker
+  replicaCount: 1
+  image:
+    repository: worker-service
+    tag: latest
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  env:
+    springProfilesActive: dev
+    kafkaBootstrapServers: kafka:9092
+    workTopic: job-work
+    eventTopic: job-events
+
+keycloak:
+  name: keycloak
+  replicaCount: 1
+  image:
+    repository: quay.io/keycloak/keycloak
+    tag: 26.0.7
+  service:
+    type: ClusterIP
+    port: 8080
+    targetPort: 8080
+  env:
+    adminUser: admin
+    adminPassword: admin
+    importRealm: false
+
+postgres:
+  name: postgres
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: 17
+  service:
+    type: ClusterIP
+    port: 5432
+    targetPort: 5432
+  env:
+    database: job_orchestration
+    username: job_orchestration
+    password: job_orchestration
+

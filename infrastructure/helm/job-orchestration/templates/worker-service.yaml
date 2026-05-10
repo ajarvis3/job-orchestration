@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "job-orchestration.componentName" (dict "Release" .Release "component" "worker") }}
+  labels:
+    {{- include "job-orchestration.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  type: {{ .Values.worker.service.type }}
+  selector:
+    app.kubernetes.io/component: worker
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: http
+      port: {{ .Values.worker.service.port }}
+      targetPort: {{ .Values.worker.service.targetPort }}

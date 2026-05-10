@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "job-orchestration.componentName" (dict "Release" .Release "component" "postgres") }}
+  labels:
+    {{- include "job-orchestration.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  serviceName: {{ include "job-orchestration.componentName" (dict "Release" .Release "component" "postgres") }}
+  replicas: {{ .Values.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: postgres
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        {{- include "job-orchestration.labels" . | nindent 8 }}
+        app.kubernetes.io/component: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          ports:
+            - containerPort: {{ .Values.postgres.service.targetPort }}
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.env.database | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.env.username | quote }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgres.env.password | quote }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
