@@ -45,6 +45,8 @@ higher workloads and will be widely available.
 | Timeouts | Each job definition will contain information on how long a job can run before it is considered to be timed out. The orchestrator will check running jobs every 15 seconds for any timeouts based on when they were last updated to a running status. If it is timed out, the state in the database will be updated to TIMEDOUT and this will become available to the worker when it checks for status | Andrew Jarvis | Open |
 | Orchestrator Database | The orchestrator will communicate with the database via Jpa and connections configured through spring properties defined by environment variables or by application-properties based on the environment. | Andrew Jarvis | Open |
 | Job States | Jobs will run one state at a time based on information in the database and coming from the kafka status topic. Database jobs will run based on schedules and states that should allow the job to be queued (i.e. not queued and not running). The orchestrator will update states accordingly when it receives status updates e.g. if it is in the running state, the database will update the state to running. | Andrew Jarvis | Open |
+| Actuator | Spring boot actuator will be used for health checks | Andrew Jarvis | Open |
+| File Storage | For image compression, a user will be able to get a grant to access a public S3 bucket. Their cognito credentials will be sent as metadata with the image they are uploading. Lambda will handle the upload event to move the image into a private bucket and alert the API that the job was created. | Andrew Jarvis | Open |
 
 ## Data Model
 
@@ -53,7 +55,7 @@ Key entities, relationships, and storage choices. Use tables or diagrams.
 | Item | Details | Owner | Status |
 |------|---------|-------|--------|
 | Relational Database | The data is structured, so a relational database suits the needs of the project. | Andrew Jarvis | Open |
-| JobStateEntity | Tracks job status in the database. Owned by the Orchestrator service. Will contain information on the job and its status. | Andrew Jarvis | Open |
+| JobStateEntity | Tracks job status in the database. Owned by the Orchestrator service. Will contain information on the job and its status. Will also contain information on who triggered the job. | Andrew Jarvis | Open |
 | JobRequestDTO | Used to send data to create a new job. It will include a job type and parameters needed to run that job. {id: long, params: object} | Andrew Jarvis | Open |
 | JobResponseDTO | Used to send back Job status. Returns with id and job state. | Andrew Jarvis | Open |
 | JobDefinition | The definition of a job. Contains information about the job type, description, parameter information, and execution details | Andrew Jarvis | Open |
@@ -73,6 +75,8 @@ Core endpoints or interfaces with request/response examples.
 | GET /api/v1/jobs/{jobId} | Gets the current state of a job given its id | Andrew Jarvis | Open |
 | GET /api/v1/jobs?offset=x&limit=y | Gets all jobs available to the user. Takes optional offset and limit | Andrew Jarvis | Open |
 | DELETE /api/v1/jobs/{jobId} | Deletes a job by id. Returns whether successful | Andrew Jarvis | Open |
+| POST /api/v1/jobs/image-compression | Takes a filename and type, returns grant to upload to S3 bucket | Andrew Jarvis | Open |
+| PUT /api/v1/jobs/image-compression-put/storage-key | Takes a file that is uploaded and stores it. For DEV only. | Andrew Jarvis | Open |
 
 ## Security
 
