@@ -38,7 +38,13 @@ higher workloads and will be widely available.
 | Kafka | Kafka will be used for communication between the orchestrator and workers | Andrew Jarvis | Open |
 | Cognito | Cognito will be used for user authentication/authorization. It will be checked at the API Gateway | Andrew Jarvis | Open |
 | Orchestrator | Handles the incoming job requests and the state machine that updates those requests. Calls job workers as needed. | Andrew Jarvis | Open |
-| Workers | Executes any tasks needed by a job given its state and parameters. Will use a pool 
+| Workers | Executes any tasks needed by a job given its state and parameters. Will use a pool of threads for execution. They will scale based on kafka queue depth using keda. Will periodically check on the status of the job during execution for timeouts or cancellations. | Andrew Jarvis | Open |
+| Kafka | Communication between orchestrator and workers for events. Orchestrator sends jobs to the workers via a work topic which contains job id, type, and params. Workers will send events to the orchestrator via a status topic. | Andrew Jarvis | Open |
+| gRPC | Worker will check on status during execution via RPC. | Andrew Jarvis | Open |
+| Retries | If a job failure is reported or there is a timeout, a job will be retried at most three times. They will be retried at an interval of retry_count * 5 minutes. A scheduled job in the orchestrator will check every minute for job in TIMEOUT or FAILED status with fewer than three retries and an updated time greater than now - (retries * 5 minutes). | Andrew Jarvis | Open |
+| Timeouts | Each job definition will contain information on how long a job can run before it is considered to be timed out. The orchestrator will check running jobs every 15 seconds for any timeouts based on when they were last updated to a running status. If it is timed out, the state in the database will be updated to TIMEDOUT and this will become available to the worker when it checks for status | Andrew Jarvis | Open |
+| Orchestrator Database | The orchestrator will communicate with the database via Jpa and connections configured through spring properties defined by environment variables or by application-properties based on the environment. | Andrew Jarvis | Open |
+| Job States | Jobs will run one state at a time based on information in the database and coming from the kafka status topic. Database jobs will run based on schedules and states that should allow the job to be queued (i.e. not queued and not running). The orchestrator will update states accordingly when it receives status updates e.g. if it is in the running state, the database will update the state to running. | Andrew Jarvis | Open |
 
 ## Data Model
 
