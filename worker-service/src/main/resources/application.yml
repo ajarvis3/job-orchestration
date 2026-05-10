@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: worker-service
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ${WORKER_KAFKA_GROUP_ID:worker-service}
+      auto-offset-reset: earliest
+    listener:
+      missing-topics-fatal: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+worker:
+  kafka:
+    enabled: ${WORKER_KAFKA_ENABLED:true}
+    work-topic: ${WORK_TOPIC:job-work}
+    event-topic: ${EVENT_TOPIC:job-events}
+

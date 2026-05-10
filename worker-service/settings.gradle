@@ -1,0 +1,5 @@
+rootProject.name = 'worker-service'
+
+include ':job-definition'
+project(':job-definition').projectDir = file('../job-definition')
+
