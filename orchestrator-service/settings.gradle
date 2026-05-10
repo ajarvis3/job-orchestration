@@ -1,1 +1,4 @@
 rootProject.name = 'orchestrator-service'
+
+include ':job-definition'
+project(':job-definition').projectDir = file('../job-definition')

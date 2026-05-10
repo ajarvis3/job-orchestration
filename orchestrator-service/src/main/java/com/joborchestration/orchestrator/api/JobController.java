@@ -1,7 +1,7 @@
 package com.joborchestration.orchestrator.api;
 
-import com.joborchestration.orchestrator.api.dto.CreateJobRequest;
 import com.joborchestration.orchestrator.api.dto.CreateImageCompressionRequest;
+import com.joborchestration.orchestrator.api.dto.CreateJobRequest;
 import com.joborchestration.orchestrator.api.dto.ImageCompressionGrantResponse;
 import com.joborchestration.orchestrator.api.dto.JobResponse;
 import com.joborchestration.orchestrator.service.JobService;

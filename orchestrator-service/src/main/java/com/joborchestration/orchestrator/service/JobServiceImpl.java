@@ -1,10 +1,10 @@
 package com.joborchestration.orchestrator.service;
 
-import com.joborchestration.orchestrator.api.dto.CreateJobRequest;
 import com.joborchestration.orchestrator.api.dto.CreateImageCompressionRequest;
+import com.joborchestration.orchestrator.api.dto.CreateJobRequest;
 import com.joborchestration.orchestrator.api.dto.ImageCompressionGrantResponse;
 import com.joborchestration.orchestrator.api.dto.JobResponse;
-import com.joborchestration.orchestrator.domain.JobState;
+import com.joborchestration.jobdefinition.JobState;
 import com.joborchestration.orchestrator.domain.JobStateEntity;
 import com.joborchestration.orchestrator.exception.JobNotFoundException;
 import com.joborchestration.orchestrator.repository.JobStateRepository;

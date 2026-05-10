@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.joborchestration.orchestrator.api.dto.CreateJobRequest;
 import com.joborchestration.orchestrator.api.dto.JobResponse;
-import com.joborchestration.orchestrator.domain.JobState;
+import com.joborchestration.jobdefinition.JobState;
 import com.joborchestration.orchestrator.domain.JobStateEntity;
 import com.joborchestration.orchestrator.exception.JobNotFoundException;
 import com.joborchestration.orchestrator.repository.JobStateRepository;

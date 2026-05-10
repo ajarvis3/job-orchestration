@@ -1,5 +1,6 @@
 package com.joborchestration.orchestrator.domain;
 
+import com.joborchestration.jobdefinition.JobState;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;

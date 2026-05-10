@@ -1,6 +1,6 @@
 package com.joborchestration.orchestrator.api.dto;
 
-import com.joborchestration.orchestrator.domain.JobState;
+import com.joborchestration.jobdefinition.JobState;
 import java.time.Instant;
 import java.util.Map;
 
@@ -16,3 +16,4 @@ public record JobResponse(
         Instant updatedAt,
         Instant lastStateChangeAt) {
 }
+

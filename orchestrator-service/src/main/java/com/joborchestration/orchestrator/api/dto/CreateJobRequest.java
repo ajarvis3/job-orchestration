@@ -8,3 +8,4 @@ public record CreateJobRequest(
         @NotBlank String jobType,
         @NotNull Map<String, Object> params) {
 }
+

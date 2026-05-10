@@ -1,0 +1,5 @@
+rootProject.name = 'job-orchestration'
+
+include 'job-definition'
+include 'orchestrator-service'
+
