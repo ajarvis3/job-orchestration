@@ -46,7 +46,8 @@ higher workloads and will be widely available.
 | Orchestrator Database | The orchestrator will communicate with the database via Jpa and connections configured through spring properties defined by environment variables or by application-properties based on the environment. | Andrew Jarvis | Open |
 | Job States | Jobs will run one state at a time based on information in the database and coming from the kafka status topic. Database jobs will run based on schedules and states that should allow the job to be queued (i.e. not queued and not running). The orchestrator will update states accordingly when it receives status updates e.g. if it is in the running state, the database will update the state to running. | Andrew Jarvis | Open |
 | Actuator | Spring boot actuator will be used for health checks | Andrew Jarvis | Open |
-| File Storage | For image compression, a user will be able to get a grant to access a public S3 bucket. Their cognito credentials will be sent as metadata with the image they are uploading. Lambda will handle the upload event to move the image into a private bucket and alert the API that the job was created. | Andrew Jarvis | Open |
+| File Storage | For image compression, a user will be able to get a grant to access a public S3 bucket. Their cognito credentials will be sent as metadata with the image they are uploading. Lambda will handle the upload event to move the image into a private bucket and alert the API that the job was created. In a local environment it will use the local filesystem. | Andrew Jarvis | Open |
+| Shared Library | Much of the specific job definition will be stored in a library that can be shared by both the orchestrator and the worker. | Andrew Jarvis | Open |
 
 ## Data Model
 
@@ -57,7 +58,7 @@ Key entities, relationships, and storage choices. Use tables or diagrams.
 | Relational Database | The data is structured, so a relational database suits the needs of the project. | Andrew Jarvis | Open |
 | JobStateEntity | Tracks job status in the database. Owned by the Orchestrator service. Will contain information on the job and its status. Will also contain information on who triggered the job. | Andrew Jarvis | Open |
 | JobRequestDTO | Used to send data to create a new job. It will include a job type and parameters needed to run that job. {id: long, params: object} | Andrew Jarvis | Open |
-| JobResponseDTO | Used to send back Job status. Returns with id and job state. | Andrew Jarvis | Open |
+| JobResponseDTO | Used to send back Job status. Returns with id and job state as well as any output parameters. | Andrew Jarvis | Open |
 | JobDefinition | The definition of a job. Contains information about the job type, description, parameter information, and execution details | Andrew Jarvis | Open |
 | JobInstance | An instance of a given job for the application. Contains information necessary to run a job, but not the execution details | Andrew Jarvis | Open |
 | JobState | An enum containing allowed job states such as CREATED, SCHEDULED, RUNNING, SUCCESS, FAILURE, TIMEOUT | Andrew Jarvis | Open |
@@ -68,6 +69,8 @@ Key entities, relationships, and storage choices. Use tables or diagrams.
 ## API Design
 
 Core endpoints or interfaces with request/response examples.
+
+All endpoints will require a Jwt to be accessed.
 
 | Item | Details | Owner | Status |
 |------|---------|-------|--------|
